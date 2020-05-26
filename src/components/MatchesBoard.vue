@@ -1,6 +1,5 @@
 <template>
-    <el-col :sm="12">
-        <h3 v-if='completed'>RECENT MATCHES</h3>
+<div>        <h3 v-if='completed'>RECENT MATCHES</h3>
         <h3 v-else>UPCOMING MATCHES</h3>
         <el-table
             :data="matches"
@@ -41,7 +40,7 @@
                 </template>
             </el-table-column>
         </el-table>
-    </el-col>
+  </div>
 </template>
 
 <script>

@@ -1,16 +1,28 @@
 <template>
   <div id="app">
     <TheHeader />
-    <el-row :gutter="40">
-      <el-col :sm="12">
-      <ScoreBoard :teams='teams' />
-      <CreateTeam :users='users'/>
-      </el-col>
-      <MatchesBoard :matches='upcomingMatches' :completed='false'/>
-      <MatchesBoard :matches='recentMatches' :completed='true'/>
-      <SubmitResult :teams='teams' />
-    </el-row>
-  </div>
+    <transition name="fade">
+      <el-row :gutter="40" v-if="showTournamentData">
+        <PlayersBoard :users='users'/>
+        <AddNewPlayer :users='users'/>
+        <TeamsBoard  :teams='teams' />
+        <CreateTeam :users='users'/>
+      </el-row>
+    </transition>
+    <el-button @click="startTournament" v-if="showTournamentData" class="start-tournament" type='success'>Start Tournament</el-button>
+      <el-row :gutter="40"  v-if="!showTournamentData" >
+        <el-col :md="12">
+        <ScoreBoard :teams='teams' />
+        </el-col>
+         <el-col :md="12">
+        <MatchesBoard :matches='upcomingMatches' :completed='false'/>
+        <MatchesBoard :matches='recentMatches' :completed='true'/>
+         </el-col>
+        <SubmitResult :teams='teams' />
+      </el-row>
+      <el-button @click="endTournament" v-if='!showTournamentData'>End Tournament</el-button>
+      <DisplayWinner :teams='teams'/>
+</div>
 </template>
 <script>
 
@@ -19,6 +31,10 @@ import ScoreBoard from './components/ScoreBoard'
 import MatchesBoard from './components/MatchesBoard'
 import CreateTeam from './components/CreateTeam'
 import SubmitResult from './components/SubmitResult'
+import TeamsBoard from './components/TeamsBoard'
+import PlayersBoard from './components/PlayersBoard'
+import AddNewPlayer from './components/AddNewPlayer'
+import DisplayWinner from './components/DisplayWinner'
 import EventBus from './event-bus';
 import db from './components/firebaseInit'
 
@@ -29,7 +45,11 @@ export default {
     ScoreBoard,
     MatchesBoard,
     CreateTeam,
-    SubmitResult
+    SubmitResult,
+    PlayersBoard,
+    TeamsBoard,
+    AddNewPlayer,
+    DisplayWinner
   },
 
   data() {
@@ -38,6 +58,7 @@ export default {
       users: [],
       upcomingMatches: [],
       recentMatches: [],
+      showTournamentData: true
     }
   },
 
@@ -46,11 +67,16 @@ export default {
     
     EventBus.$on('newTeamCreated', (team) => {
       this.teams.push(team)
+      console.log(team, this.teams)
       team.members.forEach((member)=>{
-        this.users = this.users.filter((user)=>user.name!=member)
+      this.users = this.users.filter((user)=>user.name!=member)
       })
 
     })
+
+    EventBus.$on('newPlayerAdded', (user) => {
+      this.users.push(user)
+      })
 
     EventBus.$on('newResultSubmitted', (updated_match, edit) => {
       if(!edit) {
@@ -62,6 +88,37 @@ export default {
   },
 
   methods: {
+
+    startTournament(){
+      this.showTournamentData = false
+      for(var i = 0; i<this.teams.length; i++){
+        for(var j = i + 1; j<this.teams.length; j++){
+          const match = {
+            completed: false,
+            team1: {
+              id: this.teams[i].id,
+              name: this.teams[i].name,
+              score: 0
+            },
+            team2: {
+              id: this.teams[j].id,
+              name: this.teams[j].name,
+              score: 0
+            },
+          }
+          db.collection("matches").add(match).then(function(docRef){
+              match.id = docRef.id
+          });
+          this.upcomingMatches.push(match)
+        }
+      }
+    },
+
+    endTournament() {
+      // clean data
+      // display winner
+       EventBus.$emit('openWinnerDialog')
+    },
 
     getData(){
       // TEAMS FOR SCOREBOARD
@@ -97,6 +154,7 @@ export default {
         querySnapshot.forEach(doc => {
           const user = {
             'name': doc.data().name,
+            'email':doc.data().email
           }
           const members = []
           this.teams.forEach((team)=>{
@@ -144,4 +202,33 @@ body {
 .el-tag + .el-tag {
   margin-left: 10px;
 }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1.5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active{
+  transition: transform .5s;
+}
+.slide-enter,
+.slide-leave-active{
+  transform: translateY(20px);
+}
+
+.el-button.start-tournament{
+  background-color: #E2151E;
+  border: 1px solid #E2151E ;
+  margin: 20px 0;
+}
+
+.el-button.start-tournament:hover {
+  background-color: rgb(212, 39, 47);
+    border: 1px solid rgb(212, 39, 47) ;
+
+}
+
 </style>

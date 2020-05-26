@@ -1,7 +1,5 @@
 <template>
     <div class="create-team-div">
-        <p>Add a new team to the tournament</p>
-        <el-button type="primary" @click='showCreateNewTeamDialog=true' >Create a new team</el-button>
         <el-dialog title="Create a new team" :visible="showCreateNewTeamDialog" >
             <el-form :model="group">
                 <el-form-item label="Group name">
@@ -79,6 +77,12 @@ export default {
         users:Array
     },
 
+    mounted() {
+          EventBus.$on('openCreateNewTeamDialog', () => {
+              this.showCreateNewTeamDialog = true
+      })
+    },
+
     methods: {
 
         addMember(scope) {
@@ -98,7 +102,9 @@ export default {
                     matches_lost: 0,
                     matches_won: 0
                 }
-                db.collection("teams").add(team);
+                db.collection("teams").add(team).then(function(docRef){
+                    team.id = docRef.id
+                });
                 this.showCreateNewTeamDialog = false
                 this.group = {name:'', members: []}
                 EventBus.$emit('newTeamCreated', team)
