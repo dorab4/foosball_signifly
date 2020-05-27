@@ -45,16 +45,13 @@ export default {
   },
 
   methods: {
-       openCreateNewTeamDialog() {
-          EventBus.$emit('openCreateNewTeamDialog')
-      },
-      formatter(row) {
-        return row.members.toString().split(',').join('\r\n')
-      },
+    openCreateNewTeamDialog() {
+      EventBus.$emit('openCreateNewTeamDialog')
+    },
+
+    formatter(row) {
+      return row.members.toString().split(',').join('\r\n')
+    },
   }
 }
 </script>
-
-<style >
-
-</style>

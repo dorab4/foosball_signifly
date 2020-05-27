@@ -15,16 +15,16 @@
           prop="email"
           label="Email">
         </el-table-column>
-         <el-table-column
-            align="right">
-            <template slot="header" >
-                <el-button
-                size="medium"
-                type='primary'
-                icon="el-icon-plus"
-                @click="openAddNewPlayerDialog">New player</el-button>
-            </template>
-         </el-table-column>
+        <el-table-column
+          align="right">
+          <template slot="header" >
+              <el-button
+              size="medium"
+              type='primary'
+              icon="el-icon-plus"
+              @click="openAddNewPlayerDialog">New player</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </el-col>
 </template>
@@ -50,8 +50,3 @@ export default {
   }
 }
 </script>
-
-<style >
-
-
-</style>

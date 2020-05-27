@@ -44,7 +44,6 @@ export default {
     },
 
     methods: {
-
         addNewPlayer() {
             const user = {
                 name: this.user.name,
@@ -59,7 +58,3 @@ export default {
 }
            
 </script>
-
-<style scoped>
-
-</style>

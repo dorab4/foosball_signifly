@@ -1,10 +1,10 @@
 <template>
     <el-dialog title="Foosball winner" :visible="showTournamentWinner" >
         <img src="../assets/trophy.svg" >
-        <h4>{{teams[0].name}}</h4>
+        <h4>{{winner.name}}</h4>
         <p>{{members}}</p>
     <span slot="footer" class="dialog-footer">
-        <el-button type="primary" >New Tournament</el-button>
+        <router-link class='el-button el-button--success' to="/">Start new tournament</router-link>
     </span>
   </el-dialog>
    
@@ -17,25 +17,24 @@ export default {
     data() {
       return {
         showTournamentWinner: false,
+        winner: {
+            members:[]
+        }
       }
-    },
-
-    props: {
-        teams: Object
     },
 
     computed: {
         members() {
-            return this.teams[0].members.toString().split(',').join(' and ')
+            return this.winner.members.toString().split(',').join(' and ')
         }
     },
 
     mounted() {
-        EventBus.$on('openWinnerDialog', () => {
+        EventBus.$on('openWinnerDialog', (winner) => {
             this.showTournamentWinner = true;
+            this.winner = winner;
         })
     },
-
 }
            
 </script>
@@ -44,6 +43,10 @@ export default {
 
 img{
     width: 200px;
+}
+
+a{
+    text-decoration: none;
 }
 
 </style>

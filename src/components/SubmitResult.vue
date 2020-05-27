@@ -36,6 +36,7 @@ export default {
       edit: false,
     };
   },
+  
   props: {
     teams:Array,
   },
@@ -44,7 +45,7 @@ export default {
     EventBus.$on('openSubmitResultDialog', (match) => {
         this.showSubmitResultDialog = true
         this.match = match;
-        this.edit = this.match.team1.score==0 && this.match.team2.score==0 ? 0 : 1
+        this.edit = this.match.completed==0 ? 0 : 1
     })
   },
 
