@@ -64,7 +64,7 @@ export default {
       let team2 = this.teamsList.filter((team) => team.id == this.match.team2.id )[0]
       
       // lets say each team gets 3 points when they win
-      if(this.match.team1.score > this.match.team2.score) {
+      if(team1.score > team2.score) {
         team1.matches_won++ 
         team2.matches_lost++
         team1.points =  team1.points + 3

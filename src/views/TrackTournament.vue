@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>TRACK TOURNAMENT</h2>
+        <Header />
         <el-row :gutter="40" >
             <el-col :md="12">
                 <ScoreBoard :teams='teams' />
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import Header from '../components/layouts/Header'
 import ScoreBoard from '../components/ScoreBoard'
 import MatchesBoard from '../components/MatchesBoard'
 import SubmitResult from '../components/SubmitResult'
@@ -29,7 +30,8 @@ export default {
     ScoreBoard,
     MatchesBoard,
     SubmitResult,
-    DisplayWinner
+    DisplayWinner,
+    Header
   },
 
   data() {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>CREATE TOURNAMENT</h2>
+        <Header />
         <el-row :gutter="40">
             <PlayersBoard :users='users'/>
             <AddNewPlayer :users='users'/>
@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import Header from '../components/layouts/Header'
 import CreateTeam from '../components/CreateTeam'
 import TeamsBoard from '../components/TeamsBoard'
 import PlayersBoard from '../components/PlayersBoard'
@@ -25,6 +26,7 @@ export default {
     PlayersBoard,
     TeamsBoard,
     AddNewPlayer,
+    Header
   },
 
   data() {
